@@ -1,46 +1,27 @@
 import os
-import django
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'service.settings')
-django.setup()
-
-
 import requests
 from bs4 import BeautifulSoup
+import json
+#from webscraping.models import Scraper
+from celery_worker import app
 
 
-from celery import Celery
-from django.conf import settings
-from celery.schedules import crontab
+#@app.task()
+#def save_function(answer_list):
+    #for a in answer_list:
+        #Scraper.objects.create(
+            #data=a['data'],
+            #city=a['city'],
+            #temp_max=a['temp_max'],
+            #temp_min=a['temp_min'],
+            #weather_description=a['weather_description'])
 
-
-from webscraping.models import Scraper
-
-
-app = Celery('tasks')
-app.config_from_object('django.conf:settings')
-app.conf.broker_url = settings.CELERY_BROKER_URL
-
-
-
-app.conf.beat_schedule = {
-    'scraping-task-one-min': {
-        'task': 'celery_app.hackernews_rss',
-        'schedule': crontab(),
-    },
-}
 
 
 @app.task()
-def save_function(answer_list):
-    for a in answer_list:
-        Scraper.objects.create(
-            data=a['data'],
-            city=a['city'],
-            temp_max=a['temp_max'],
-            temp_min=a['temp_min'],
-            weather_description=a['weather_description'])
-
+def save_function(article_list):
+    with open('weather.txt', 'w') as outfile:
+        json.dump(article_list, outfile)
 
 @app.task()
 def hackernews_rss():
@@ -58,12 +39,9 @@ def hackernews_rss():
     temp_min = bs.find('span', class_="low").text[1:]
     weather_description = bs.find('div', class_="phrase").text
 
-    weather_answer = [{
+    weather_answer = {
         'data': data, 'city': 'Volgograd', 'temp_max': temp_max, 'temp_min': temp_min,
         'weather_description': weather_description,
-    }]
+    }
 
     return save_function(weather_answer)
-
-
-app.autodiscover_tasks()

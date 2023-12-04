@@ -35,7 +35,7 @@ services:
       context: .
     hostname: worker
     entrypoint: celery
-    command: -A celery_app.app worker --loglevel=info
+    command: -A weather_parser.app worker --beat --loglevel=info
     volumes:
       - ./service:/service
     links:
@@ -55,7 +55,7 @@ services:
       context: .
     hostname: flower
     entrypoint: celery
-    command: -A celery_app.app flower
+    command: -A weather_parser.app flower
     volumes:
       - ./service:/service
     links:
