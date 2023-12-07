@@ -14,16 +14,17 @@ class User(UserModel):
     city_id = models.ForeignKey(City, on_delete=models.PROTECT, null=True)
 
     #def __str__(self):
-   #     return f'Client name: {self.user}'
+        #return f'Client name: {self}'
 
 
 class Weather(models.Model):
     city_weather = models.OneToOneField(City, on_delete=models.PROTECT, null=True)
-    data = models.CharField(max_length=100, null=True)
+    data = models.DateTimeField(auto_now_add=True, null=True) #,primary_key=True
+    #data = models.CharField(max_length=100, null=True)
     temp_max = models.CharField(max_length=100, null=True)
     temp_min = models.CharField(max_length=100, null=True)
     weather_description = models.CharField(max_length=100, null=True)
 
-    def __str__(self):
-        return f'Weather in: {self.city_weather, self.data}'
+    #def __str__(self):
+        #return f'Weather in: {self.city_weather, self.data}'
 
