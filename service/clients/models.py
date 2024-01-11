@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User as UserModel
+from django.contrib.auth.models import AbstractUser
 
 
 class City(models.Model):
@@ -10,21 +10,17 @@ class City(models.Model):
         return self.name
 
 
-class User(UserModel):
+class User(AbstractUser):
     city_id = models.ForeignKey(City, on_delete=models.PROTECT, null=True)
-
-    #def __str__(self):
-        #return f'Client name: {self}'
 
 
 class Weather(models.Model):
-    city_weather = models.OneToOneField(City, on_delete=models.PROTECT, null=True)
-    data = models.DateTimeField(auto_now_add=True, null=True) #,primary_key=True
-    #data = models.CharField(max_length=100, null=True)
+    city_weather = models.ForeignKey(City, on_delete=models.PROTECT, null=True)
+    created_at = models.DateField(auto_now_add=True, null=True)
     temp_max = models.CharField(max_length=100, null=True)
     temp_min = models.CharField(max_length=100, null=True)
-    weather_description = models.CharField(max_length=100, null=True)
+    weather_description = models.CharField(max_length=1000, null=True)
 
-    #def __str__(self):
-        #return f'Weather in: {self.city_weather, self.data}'
+    def __str__(self):
+        return f'Weather in: {self.city_weather,self.created_at}'
 

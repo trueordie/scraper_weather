@@ -1,3 +1,4 @@
+version: '3'
 services:
   web-app:
     build:
@@ -24,6 +25,10 @@ services:
       - POSTGRES_DB=dbname
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=pass
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    #ports:
+      #- "5432:5432"
 
   redis:
     image: redis:7.0.5-alpine
@@ -64,6 +69,10 @@ services:
       - redis
     ports:
       - "5555:5555"
+
+volumes:
+  pg-data:
+
 
 
 

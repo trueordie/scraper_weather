@@ -17,7 +17,7 @@ app = Celery('tasks')
 app.config_from_object('django.conf:settings')
 app.conf.broker_url = settings.CELERY_BROKER_URL
 
-#app.conf.beat_schedule = {
+app.conf.beat_schedule = {
     'scraping-task-one-min': {
         'task': 'weather_parser.weather_collector_vlg',
         'schedule': crontab(),
@@ -38,7 +38,6 @@ def save_function(answer_list):
     for a in answer_list:
         Weather.objects.create(
             city_weather=a['city'],
-            #data=a['data'],
             temp_max=a['temp_max'],
             temp_min=a['temp_min'],
             weather_description=a['weather_description'])
@@ -56,7 +55,6 @@ def weather_collector_vlg():
     bs = BeautifulSoup(response.text, 'lxml')
 
     city_weather = City.objects.get(id=1)
-    #data = bs.find('span', class_="module-header sub date").text
     temp_max = bs.find('span', class_="high").text
     temp_min = bs.find('span', class_="low").text[1:]
     weather_description = bs.find('div', class_="phrase").text
@@ -65,7 +63,7 @@ def weather_collector_vlg():
         'city': city_weather, 'temp_max': temp_max, 'temp_min': temp_min,
         'weather_description': weather_description,
     }]
-    # 'data': data,
+
     return save_function(weather_answer)
 
 
@@ -81,7 +79,6 @@ def weather_collector_msk():
     bs = BeautifulSoup(response.text, 'lxml')
 
     city_weather = City.objects.get(id=2)
-    #data = bs.find('span', class_="module-header sub date").text
     temp_max = bs.find('span', class_="high").text
     temp_min = bs.find('span', class_="low").text[1:]
     weather_description = bs.find('div', class_="phrase").text
@@ -90,7 +87,7 @@ def weather_collector_msk():
         'city': city_weather, 'temp_max': temp_max, 'temp_min': temp_min,
         'weather_description': weather_description,
     }]
-    # 'data': data,
+
     return save_function(weather_answer)
 
 
@@ -106,7 +103,6 @@ def weather_collector_spb():
     bs = BeautifulSoup(response.text, 'lxml')
 
     city_weather = City.objects.get(id=3)
-    #data = bs.find('span', class_="module-header sub date").text
     temp_max = bs.find('span', class_="high").text
     temp_min = bs.find('span', class_="low").text[1:]
     weather_description = bs.find('div', class_="phrase").text
@@ -115,7 +111,7 @@ def weather_collector_spb():
         'city': city_weather, 'temp_max': temp_max, 'temp_min': temp_min,
         'weather_description': weather_description,
     }]
-    # 'data': data,
+
     return save_function(weather_answer)
 
 
