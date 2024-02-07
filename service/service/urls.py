@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from clients.views import ClientsView, UserWeatherView
+from clients.views import ClientsView, UserWeatherView, weather_view
 
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView, TokenVerifyView)
 
@@ -29,7 +29,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('api/weather/', UserWeatherView.as_view(), name="weather")
+    path('api/weather/', UserWeatherView.as_view(), name="weather"),
+    path('weather_show/', weather_view),
 ]
 
 

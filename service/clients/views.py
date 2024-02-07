@@ -21,3 +21,7 @@ class UserWeatherView(generics.ListAPIView):
         user_city = self.request.user.city_id
         return Weather.objects.filter(city_weather=user_city).all()
     queryset = get_queryset
+
+
+def weather_view(request):
+    return render(request, 'main_app.html')
